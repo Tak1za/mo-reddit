@@ -148,7 +148,6 @@ export class UserResolver {
         username: options.username,
         password: hashedPassword,
       }).save();
-      console.log('created user: ', user)
 
       req.session.userId = user.id;
 

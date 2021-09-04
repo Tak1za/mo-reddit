@@ -1,13 +1,12 @@
 import { withUrqlClient } from "next-urql";
-import Navbar from "../components/Navbar";
+import Layout from "../components/Layout";
 import { usePostsQuery } from "../generated/graphql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 
 const Index = () => {
   const [{ data }] = usePostsQuery();
   return (
-    <>
-      <Navbar />
+    <Layout>
       <div>Hello World!</div>
       <br />
       {!data ? (
@@ -15,7 +14,7 @@ const Index = () => {
       ) : (
         data.posts.map((p) => <div key={p.id}>{p.title}</div>)
       )}
-    </>
+    </Layout>
   );
 };
 
