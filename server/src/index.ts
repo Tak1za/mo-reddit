@@ -4,6 +4,7 @@ import cors from "cors";
 import express from "express";
 import session from "express-session";
 import Redis from "ioredis";
+import path from "path";
 import "reflect-metadata";
 import { buildSchema } from "type-graphql";
 import { createConnection } from "typeorm";
@@ -23,15 +24,18 @@ declare module "express-session" {
 }
 
 const main = async () => {
-  await createConnection({
+  const conn = await createConnection({
     type: "postgres",
     database: "moreddit2",
     username: "postgres",
     password: "postgres",
     logging: true,
     synchronize: !__prod__,
+    migrations: [path.join(__dirname, "./migrations/*")],
     entities: [Post, User],
   });
+
+  await conn.runMigrations();
 
   const app = express();
 
@@ -79,7 +83,7 @@ const main = async () => {
 
   apolloServer.applyMiddleware({
     app,
-    cors: false
+    cors: false,
   });
 
   app.listen(4000, () => {
